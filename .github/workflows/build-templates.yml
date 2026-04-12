@@ -24,7 +24,7 @@ jobs:
       - name: Run Headless Encryption Script
         run: |
           # This runs YOUR version of the script which is already in your repo
-          python3 Godot Secure AES-256.py ./godot
+          python3 "Godot Secure AES-256.py" ./godot
 
       - name: Install dependencies
         run: |

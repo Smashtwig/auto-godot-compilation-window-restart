@@ -25,23 +25,10 @@ jobs:
           echo "Latest Godot version: $TAG"
           git clone --depth 1 --branch $TAG https://github.com/godotengine/godot.git godot
 
-
-      - name: Clone Godot Secure
-        run: |
-          git clone https://github.com/Smashtwig/auto-godot-compilation-window-restart.git
-
-
-      - name: Detect encryption script
-        run: |
-          SCRIPT=$(find Godot-Secure -type f -name "*.py" | grep "AES" | head -n 1)
-          echo "Detected script: $SCRIPT"
-          echo "SCRIPT=$SCRIPT" >> $GITHUB_ENV
-
-
       - name: Run encryption script
         run: |
           export SCRIPT_AES256_ENCRYPTION_KEY=$SCRIPT_AES256_ENCRYPTION_KEY
-          printf "y\n\n" | python3 "$SCRIPT" godot
+          printf "y\n\n" | python3 "Godot Secure AES-256.py" ./godot
 
       - name: Install dependencies
         run: |

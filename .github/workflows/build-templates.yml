@@ -28,7 +28,7 @@ jobs:
 
       - name: Clone Godot Secure
         run: |
-          git clone https://github.com/KnifeXRage/Godot-Secure.git
+          git clone https://github.com/Smashtwig/auto-godot-compilation-window-restart.git
 
 
       - name: Detect encryption script

@@ -28,7 +28,11 @@ jobs:
       - name: Run encryption script
         run: |
           export SCRIPT_AES256_ENCRYPTION_KEY=$SCRIPT_AES256_ENCRYPTION_KEY
-          printf "y\n\n" | python3 "Godot Secure AES-256.py" ./godot
+          python3 "Godot Secure AES-256.py" ./godot <<EOF
+          y
+          n
+          n
+          EOF
 
       - name: Install dependencies
         run: |
@@ -78,13 +82,36 @@ jobs:
           cd ..
 
 
-      - name: Package Windows templates
+      - name: Package Windows templates (robust)
         run: |
-          mkdir templates_windows
-          cp godot/bin/*windows* templates_windows/
+          set -e
+      
+          mkdir -p templates_windows
+      
+          echo "🔍 Searching for Windows build outputs..."
+          FILES=$(find godot -type f -iname "godot.windows*.exe")
+      
+          if [ -z "$FILES" ]; then
+            echo "❌ No Windows binaries found. Build likely failed."
+            echo "Dumping bin directory for debugging:"
+            ls -R godot/bin/ || true
+            exit 1
+          fi
+      
+          echo "✅ Found files:"
+          echo "$FILES"
+      
+          # Copy all matching binaries
+          for f in $FILES; do
+            cp "$f" templates_windows/
+          done
+      
+          echo "📦 Packaging..."
           cd templates_windows
           zip -9 -r ../export_templates_windows.zip .
           cd ..
+      
+          echo "✅ Packaging complete"
 
 
       - name: Upload Linux templates
